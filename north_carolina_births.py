@@ -45,7 +45,7 @@ df.info()
 
 """# Overview"""
 
-#print('Yougest age for a monther:',df['mom_age'].min(),', Oldest age for a monther:',df['mom_age'].max())
+#print('Yougest age for a mother:',df['mom_age'].min(),', Oldest age for a mother:',df['mom_age'].max())
 #print('Yougest age for a father:',int(df['dad_age'].min()),', Oldest age for a father:',int(df['dad_age'].max()))
 
 plt.figure(figsize=(12,6))
@@ -53,14 +53,15 @@ plt.subplot(1,2,1)
 plt.scatter(df['mom_age'],df['dad_age'])
 plt.xticks([20,25,30,35,40,45,50,55])
 plt.yticks([20,25,30,35,40,45,50,55])
-plt.title("Distribution of Parent's Age")
-plt.xlabel('Age (Monther)')
+plt.title("Parents' Ages")
+plt.xlabel('Age (Mother)')
 plt.ylabel('Age (Father)')
 
 plt.subplot(1,2,2)
-plt.hist(df['mom_weight_gained'])
-plt.title("Distribution of the weight gained during Pregnancy")
-plt.xlabel('Weight')
+counts,bars,patches=plt.hist(df['mom_weight_gained'])
+plt.title("Mother's Weight Gain During Pregnancy")
+plt.bar_label(patches,fmt='%.0f',padding=1)
+plt.xlabel('Weight (pounds)')
 plt.ylabel("Frequency")
 
 plt.tight_layout()
@@ -72,7 +73,7 @@ plt.subplot(2,2,1)
 #plt.figure(figsize=(12,6))
 counts,bins,patches=plt.hist(df['mom_age'],bins=[15,20,25,30,35,40,45,50])
 plt.bar_label(patches, fmt='%.0f', padding=1)
-plt.title("Distribution of Age")
+plt.title("Mothers' Ages")
 plt.xlabel('Age')
 plt.ylabel("Frequency")
 #plt.show()
@@ -130,7 +131,7 @@ plt.subplot(2,2,1)
 counts,bars,patches=plt.hist(df['weeks'],bins=[20,25,30,35,40,45])
 plt.bar_label(patches,fmt='%.0f',padding=1)
 plt.title("Length of Pregnancy")
-plt.xlabel('Length')
+plt.xlabel('Length (Weeks)')
 plt.ylabel('Frequency')
 
 plt.subplot(2,2,2)
@@ -153,7 +154,7 @@ plt.ylabel('Counts')
 plt.subplot(2,2,4)
 plt.pie(df['gender'].value_counts().rename(index={'female':'Female','male':'Male'}),
         labels=df['gender'].value_counts().rename(index={'female':'Female','male':'Male'}).index,autopct='%.2f%%')
-plt.title('Geneder')
+plt.title('Gender')
 plt.legend(title='Gender',loc='lower right')
 
 plt.suptitle("Information about 800 Newborns",size=16)
@@ -239,7 +240,7 @@ print((Age_20_mean,Age_30_mean))
 print('Age group 20',np.floor(Age_20_mean),'weeks',round((Age_20_mean-np.floor(Age_20_mean))*7,2),'days,',
       'Age group 30',np.floor(Age_30_mean),'weeks',round((Age_30_mean-np.floor(Age_30_mean))*7,2),'days,',
       'Difference',round((Age_20_mean-Age_30_mean)*7,2),'days')
-print('According to CDC, a full-term pregnancy was defined as 37 completed weeks of gestation or later.')
+print('According to CDC, a term pregnancy was defined as 37–41 completed weeks of gestation.')
 
 # Analysis 2
 #calculated the pooled sample proportition
@@ -252,8 +253,8 @@ if p_hat*Age_20['weight'].count()>=10 and Age_20['weight'].count()*(1-p_hat)>=10
 # calculate the proportion of newborns with low birth weight in both group
 Age_20_porportion=Age_20['low_birth_weight'].sum()/Age_20['weight'].count()
 Age_30_porportion=Age_30['low_birth_weight'].sum()/Age_30['weight'].count()
-#print(Age_20_porportion)
-#print(Age_30_porportion)
+print(Age_20_porportion)
+print(Age_30_porportion)
 #calculate the z statistics
 z_statistics=(Age_20_porportion-Age_30_porportion)/np.sqrt(p_hat*(1-p_hat)*(1/Age_20['weight'].count()+1/Age_30['weight'].count()))
 print('z_statistics',z_statistics)
@@ -266,8 +267,6 @@ print('If the z statistics is less than',round(norm.ppf(0.025),2),'or larger tha
 print('Becuase z statistics is', round(z_statistics,2),'we failed to reject null hypothesis')
 print('Conclusion: At the significance level of 5%, there isn\'t sufficient evidence that the porportion of newborns with low birth weight is different in both groups.' )
 
-df.info()
-
 """## Prepare the Sample for analysis"""
 
 baby_male=df[(df['habit']=='nonsmoker') & (df['whitemom']=='white') & (df['marital']=='married') & (df['gender']=='male')]
@@ -278,7 +277,7 @@ baby_female.reset_index(drop=True,inplace=True)
 
 # Analysis 3
 # Null Hypothesis: the weight between male and femal baby is the same
-# Null Hypothesis: the weight between male and femal baby is the different
+# Alternative Hypothesis: the weight between male and femal baby is the different
 #calculate the mean for each group
 baby_male_mean=baby_male['weight'].mean()
 baby_female_mean=baby_female['weight'].mean()
@@ -299,3 +298,88 @@ print('We reject null hypothesis if the t statistics is less than', round(t.ppf(
 print('The t statistics is ', round(t_statistics,2),'therefore we reject null hypothesis')
 print('Mean weight for male baby (pounds)',round(baby_male_mean,2),'Mean weight for female baby (pounds)',round(baby_female_mean,2),'difference (pounds)',round(baby_male_mean-baby_female_mean,2))
 print('A baby with weight between 5.5 pounds and 8.8 pounds considered as typical range')
+
+# code for export graphs
+#plt.figure(figsize=(10,10))
+# counts,bins,patches=plt.hist(df['mom_age'],bins=[15,20,25,30,35,40,45,50])
+# plt.bar_label(patches, fmt='%.0f', padding=1,fontsize=14)
+# plt.title("Mothers' Ages",fontsize=25,pad=15)
+# plt.xlabel('Age',fontsize=18,labelpad=10)
+# plt.ylabel("Frequency",fontsize=18,labelpad=10)
+# plt.xticks(fontsize=14)
+# plt.yticks(fontsize=14)
+
+
+
+#plt.figure(figsize=(12,6))
+# bars=plt.bar(df['habit'].value_counts().rename(index={'nonsmoker':'Non Smoker','smoker':'Smoker'}).index,
+#              df['habit'].value_counts().rename(index={'nonsmoker':'Non Smoker','smoker':'Smoker'}))
+# plt.bar_label(bars,fmt='%.0f', padding=1,fontsize=14)
+# plt.title("Smoking Status",fontsize=25,pad=15)
+# plt.xlabel('Status',fontsize=18,labelpad=10)
+# plt.ylabel("Counts",fontsize=18,labelpad=10)
+# plt.xticks(fontsize=14)
+# plt.yticks(fontsize=14)
+
+# plt.scatter(df['mom_age'],df['dad_age'])
+# plt.xticks([20,25,30,35,40,45,50,55],fontsize=14)
+# plt.yticks([20,25,30,35,40,45,50,55],fontsize=14)
+# plt.title("Parents' Ages",fontsize=25,pad=15)
+# plt.xlabel('Age (Mother)',fontsize=18,labelpad=10)
+# plt.ylabel('Age (Father)',fontsize=18,labelpad=10)
+
+# counts,bars,patches=plt.hist(df['mom_weight_gained'])
+# plt.title("Mother's Weight Gain During Pregnancy",fontsize=25,pad=15)
+# plt.bar_label(patches,fmt='%.0f',padding=1,fontsize=14)
+# plt.xlabel('Weight (pounds)',fontsize=18,labelpad=10)
+# plt.ylabel("Frequency",fontsize=18,labelpad=10)
+# plt.xticks(fontsize=14)
+# plt.yticks(fontsize=14)
+
+# plt.pie(df['marital'].value_counts().rename({'married':'Married','not married':'Not Married'}),
+#         labels=df['marital'].value_counts().rename({'married':'Married','not married':'Not Married'}).index,
+#         wedgeprops={'width': 0.4},autopct='%.2f%%',pctdistance=0.8,textprops={'fontsize': 18},colors=['#1F77B4', '#369E96'])
+# plt.title("Marital Status",fontsize=25,pad=15)
+# plt.legend(loc='lower left',fontsize=18,frameon=False)
+
+# plt.pie(df['whitemom'].value_counts().rename(index={'white':'White','not white':'Not White'}),
+#         labels=df['whitemom'].value_counts().rename(index={'white':'White','not white':'Not White'}).index,autopct='%.02f%%',textprops={'fontsize': 18},colors=['#1F77B4', '#DE858B'])
+# plt.legend(loc='lower left',fontsize=18,frameon=False)
+# plt.title('Demographic Distribution',fontsize=25,pad=15)
+
+
+# counts,bars,patches=plt.hist(df['weeks'],bins=[20,25,30,35,40,45])
+# plt.bar_label(patches,fmt='%.0f',padding=1,fontsize=14)
+# plt.title("Length of Pregnancy",fontsize=25,pad=15)
+# plt.xlabel('Length (Weeks)',fontsize=18,labelpad=10)
+# plt.ylabel('Frequency',fontsize=18,labelpad=10)
+# plt.xticks(fontsize=14)
+# plt.yticks(fontsize=14)
+
+# bars=plt.bar(df['visits_groupped'].value_counts().reindex(['No Visits','Less Than 10','10 to 15','16 to 20','More Than 20']).index,
+#         df['visits_groupped'].value_counts().reindex(['No Visits','Less Than 10','10 to 15','16 to 20','More Than 20']))
+# plt.xticks(rotation=45)
+# plt.title('Number of Hospital Visits during Pregnancy',fontsize=25,pad=15)
+# plt.xlabel("Category",fontsize=18,labelpad=10)
+# plt.ylabel('Counts',fontsize=18,labelpad=10)
+# plt.bar_label(bars,fmt='%.0f',padding=1,fontsize=14)
+# plt.xticks(fontsize=14)
+# plt.yticks(fontsize=14)
+
+
+# bars=plt.bar(df['weight_groupped'].value_counts().reindex(['Extremely Low','Very Low','Low','Typical Range','High']).index,
+#         df['weight_groupped'].value_counts().reindex(['Extremely Low','Very Low','Low','Typical Range','High']))
+# plt.title('Distribution of the Weight',fontsize=25,pad=15)
+# plt.bar_label(bars,fmt='%.0f',padding=1,fontsize=14)
+# plt.xlabel('Category',fontsize=18,labelpad=10)
+# plt.ylabel('Counts',fontsize=18,labelpad=10)
+# plt.xticks(fontsize=14)
+# plt.yticks(fontsize=14)
+
+# plt.pie(df['gender'].value_counts().rename(index={'female':'Female','male':'Male'}),
+#         labels=df['gender'].value_counts().rename(index={'female':'Female','male':'Male'}).index,autopct='%.2f%%',textprops={'fontsize': 18},colors=['#1F77B4', '#369E96'])
+# plt.title('Gender',fontsize=25,pad=15)
+# plt.legend(loc='lower right',fontsize=18,frameon=False)
+
+# plt.savefig("chart.png", transparent=True, dpi=300)
+# plt.show()
